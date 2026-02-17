@@ -3,7 +3,9 @@
 This repository contains the files and instructions for a custom 3D-printed enclosure to put your Cerelog ESP-EEG inside of
 
 ## Preview
-
+<img src="printed1.png" alt="Printedphoto" width="350">
+<img src="printed2.png" alt="Printedphoto" width="350">
+<img src="printed3.png" alt="Printedphoto" width="350">
 <img src="caseprev2.png" alt="Case Photo 1" width="350">
 <img src="caseprev1.png" alt="Case Photo 2" width="350">
 
