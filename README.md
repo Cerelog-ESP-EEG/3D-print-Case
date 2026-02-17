@@ -12,4 +12,4 @@ This repository contains the files and instructions for a custom 3D-printed encl
 ## Preview
 
 <img src="caseprev.png" alt="Case Photo 1" width="450">
-<img src="caseprev2.png" alt="Case Photo 2" width="450">
+<img src="caseprev22.png" alt="Case Photo 2" width="450">
