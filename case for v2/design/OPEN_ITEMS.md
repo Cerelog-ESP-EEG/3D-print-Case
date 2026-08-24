@@ -66,3 +66,36 @@ the bed texture lands on the visible face and looks genuinely moulded.
 
 Geometric texture on the side walls is additionally unsafe: they are locally
 thinned to 0.60-0.80 mm at the switch, microSD and -X ports.
+
+## 6. Lid STL has self-intersections in the engraved lettering
+
+`case_v2_lid.stl` is **watertight, manifold, correctly oriented, correct
+volume** — but carries 34 self-intersecting facet pairs.
+
+All of them sit in the engraved letter walls, spanning 0.40 mm in Z (the
+engraving depth). Isolated by testing each string on a bare plate:
+
+| String | Self-intersects |
+|---|---|
+| `ON`, `OFF`, `Cerelog` | no |
+| `microSD`, `ESP-EEG V2` | **yes** |
+
+It is FreeCAD's ShapeString glyph tessellation, not the case geometry:
+
+- Persists at every tessellation tolerance from 0.10 down to 0.01.
+- Persists across Arial Bold, Arial, Arial Narrow Bold, Verdana Bold,
+  Tahoma Bold and DIN Alternate — no font is clean for all three strings.
+- Individual curved glyphs (`m c r o S D`) fail on their own at 3 mm; `i`
+  does not. Larger sizes do not fix `microSD`.
+- The underlying OCC solid is valid, with correct volume.
+
+**Do not run FreeCAD's mesh repair on it.** The sequence
+`fixSelfIntersections` / `removeFoldsOnSurface` drops the lid from
+6501 mm3 to 2498 mm3 — it deletes real geometry and breaks solidity.
+
+**Recommendation: print it.** Watertight + manifold + consistent normals are
+what slicers actually need; self-intersections in engraved text are the most
+common benign STL defect and are auto-repaired on import. If a slicer does
+refuse, the one-line fallback is to empty `LABELS` and shorten the title.
+
+`case_v2_base.stl` is completely clean on every check.
