@@ -1,0 +1,37 @@
+=== Cerelog ESP-EEG V2 case ===
+outer     102.60 x 46.55 x 9.75 (base+lid = 11.35)
+cavity    99.40 x 43.35, corner R 3.30
+PCB sits at Z 3.70 .. 5.21
+base shell volume 9603.4
+after 4 peg standoffs (boss 2.50 + peg 2.71), volume 9795.1
+  cut usb_c          on -X wall, removed 160.1 mm3
+  cut battery_cable  on -X wall, removed 96.4 mm3
+  cut slide_switch   on -Y wall, removed 41.8 mm3
+  cut microsd        on -Y wall, removed 100.2 mm3
+  cut 6 snap grooves, 0.55 mm deep into the 1.60 mm wall
+  thin switch_thin   on -Y wall to 0.60 mm, removed 39.7 mm3
+  thin microsd_thin  on -Y wall to 0.80 mm, removed 53.3 mm3
+  thin minus_x_ports on -X wall to 0.70 mm, removed 56.8 mm3
+lid blank volume 8004.4
+  4 lid sleeves: 4.44 tall, bore 2.30 x 1.70 deep, stop 0.10 above PCB
+  3 LED holes, 1.20 mm dia, through the 1.60 mm lid
+  notch minus_x_connectors in lid rim, removed 40.6 mm3
+  cut header_block   in lid, removed 732.0 mm3
+  cut button_lo      in lid, removed 41.9 mm3
+  cut button_hi      in lid, removed 42.0 mm3
+  cut header_1x02    in lid, removed 37.3 mm3
+  added 6 snap beads, 0.45 mm proud (0.25 mm engagement past the wall)
+  text 'Cerelog' width 35.28 at y 1.50
+  text 'ESP-EEG V2' width 56.85 at y -8.50
+  label 'ON' 5.76 wide at (-38.00, -18.80), 0.50 deep
+  label 'OFF' 7.99 wide at (-27.00, -18.80), 0.50 deep
+  label 'microSD' 16.75 wide at (-12.10, -18.80), 0.50 deep
+base: solids=1 valid=True volume=9205.3
+      bbox 102.60 x 46.55 x 9.75  (Z 0.00..9.75)
+lid: solids=1 valid=True volume=7109.8
+      bbox 102.60 x 46.55 x 6.04  (Z 5.31..11.35)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_base.stl  (7810 facets)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_lid.stl  (34312 facets)
+wrote case_v2.FCStd
+wrote case_v2_params.json
+OK

@@ -1,0 +1,22 @@
+case  102.60 x 46.55 x 11.35    PCB underside at Z 3.70
+skipping known-bad models: 530480210 (height wrong), SOLID, SOLID001, SOLID002
+
+=== BOARD vs CASE (intersection > 0.001 mm3) ===
+  none  (156 solids checked)
+
+=== BASE vs LID ===
+  0.0000 mm3  clean
+
+=== peg / sleeve mate ===
+  peg top 6.41, sleeve mouth 5.31 -> engagement 1.10 mm
+  peg ( -46.27, -18.79)  obstruction 0.0000 mm3  clear
+  peg (  46.37, -18.61)  obstruction 0.0000 mm3  clear
+  peg ( -46.33,  18.75)  obstruction 0.0000 mm3  clear
+  peg (  46.40,  18.38)  obstruction 0.0000 mm3  clear
+
+=== LED holes clear through the lid ===
+  LED ( -24.25,  -4.07)  obstruction 0.0000 mm3  open
+  LED ( -39.60, -16.63)  obstruction 0.0000 mm3  open
+  LED ( -17.65,   2.53)  obstruction 0.0000 mm3  open
+
+RESULT: PASS

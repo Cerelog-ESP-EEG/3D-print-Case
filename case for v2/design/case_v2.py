@@ -13,8 +13,19 @@ Change a constant, re-run, get new STLs.
 """
 import os, sys, traceback
 
-OUTDIR = os.path.dirname(os.path.abspath(__file__))
-LOG = open(os.path.join(OUTDIR, "build_log.txt"), "w")
+# This script lives in design/. Outputs are routed to sibling folders:
+#   design/            this script, logs, params, measurements, previews
+#   Case files FreeCAD/  .FCStd documents
+#   stl/               printable STLs + PRINT.md
+DESIGN_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT       = os.path.dirname(DESIGN_DIR)
+FCSTD_DIR  = os.path.join(ROOT, "Case files FreeCAD")
+STL_DIR    = os.path.join(ROOT, "stl")
+for _d in (FCSTD_DIR, STL_DIR):
+    if not os.path.isdir(_d):
+        os.makedirs(_d)
+OUTDIR = DESIGN_DIR
+LOG = open(os.path.join(DESIGN_DIR, "build_log.txt"), "w")
 def log(*a):
     s = " ".join(str(x) for x in a)
     LOG.write(s + "\n"); LOG.flush()
@@ -27,10 +38,10 @@ PCB_R = 3.00                      # board corner radius
 # --- fit and shell
 CLR      = 0.30                   # gap between PCB edge and inner wall
 WALL     = 1.60                   # side wall thickness (4 perims @ 0.4 nozzle)
-FLOOR_T  = 1.60                   # base floor thickness
+FLOOR_T  = 1.20                   # base floor thickness (3 perims @ 0.4)
 LID_T    = 1.60                   # lid plate thickness
-BASE_H   = 10.20                  # base outer bottom -> rim top
-                                  # set by ESP32 under the rim (top 8.25)
+BASE_H   = 9.75                   # base outer bottom -> rim top
+                                  # set by ESP32 under the rim (top 7.85)
                                   # +0.70 + lip. The taller -X connectors clear
                                   # via RIM_NOTCH instead of raising the case.
 LIP_H    = 1.20                   # lid lip depth into cavity
@@ -91,12 +102,29 @@ WALL_THIN = [
 # Short segments rather than one continuous bead: a 80 mm bead is far too
 # stiff to deflect, three 14 mm ones snap with thumb pressure.
 SNAP_PROT   = 0.45                # bead sticks this far off the rim face
-SNAP_Z      = 9.575               # apex height (rim spans 9.00 .. 10.20)
+SNAP_Z      = BASE_H - LIP_H + 0.60   # apex, measured up from rim bottom
 SNAP_HALF   = 0.325               # bead half-height, so 0.65 tall overall
 SNAP_LEN    = 14.00               # length of each segment
 SNAP_X      = [-30.0, 0.0, 30.0]  # segment centres, both long walls
 SNAP_GROOVE_D = 0.55              # groove depth into the 1.60 mm wall
 SNAP_GROOVE_PAD = 0.10            # groove is this much taller than the bead
+
+# --- LED light holes: straight through the lid, directly over each LED.
+# Three identical 2.10 x 2.11 parts with consecutive LCSC numbers
+# (C2874116/7/8), tops at case Z 6.30, i.e. 3.45 mm below the lid.
+LED_HOLE_D = 1.20
+LED_HOLES = [
+    (-24.25,  -4.07),
+    (-39.60, -16.63),
+    (-17.65,   2.53),
+]
+
+# --- lid sleeves: tubes on the lid underside that drop over the pegs
+# poking up through the PCB, locating the lid and capping the board.
+SLEEVE_ON    = True
+SLEEVE_OD    = 4.50
+SLEEVE_BORE  = 2.30               # PEG_D 2.00 + 0.30 clearance
+SLEEVE_GAP   = 0.10               # sleeve stops this far above the PCB
 
 # --- lid rim notches: (name, x0, x1, y0, y1)
 # The rim is the lowest part of the lid. Notching it over the tall -X
@@ -125,6 +153,28 @@ TEXT_SIZE  = 7.0
 TEXT_DEPTH  = 0.80                # engraving depth: half of LID_T
 TEXT_CX    = -8.00                # centre of the free lid area
 TEXT_GAP   = 3.00                 # line spacing
+
+# --- small engraved labels: (text, size, x_centre, y_centre)
+# ON / OFF flank the slide-switch actuator, which sits at X -32.46 and
+# travels in X. ON is at lower X (the USB-C / battery end of the case).
+LABEL_DEPTH = 0.50
+LABELS = [
+    ("ON",      3.00, -38.00, -18.80),
+    ("OFF",     3.00, -27.00, -18.80),
+    ("microSD", 3.00, -12.10, -18.80),
+]
+
+# --- lid top texture: fine diagonal grooves
+TEX_ON      = False               # see README: use a textured build plate
+TEX_DEPTH   = 0.25                # shallower than any engraving
+TEX_WIDTH   = 0.55
+TEX_PITCH   = 2.40
+TEX_ANGLE   = 45.0
+# smooth plaques where lettering goes - texture through 3 mm letters is unreadable
+TEX_KEEPOUT = [
+    (-38.00, 22.00, -11.00, 11.00),   # Cerelog / ESP-EEG V2 title block
+    (-42.00,  -2.00, -21.00, -16.60),  # ON / OFF / microSD label row
+]
 
 # ------------------------------------------------------------------- helpers
 def rbox(l, w, h, r, z0=0.0, cx=0.0, cy=0.0):
@@ -265,6 +315,29 @@ try:
     lid = lid.fuse(lip).removeSplitter()
     log("lid blank volume %.1f" % lid.Volume)
 
+    if SLEEVE_ON:
+        peg_top   = Z_PCB_BOT + PCB_T + 1.20
+        sleeve_bot = Z_PCB_BOT + PCB_T + SLEEVE_GAP
+        sleeve_h   = BASE_H - sleeve_bot
+        bore_h     = (peg_top - sleeve_bot) + 0.60
+        for x, y in MOUNT_HOLES:
+            tube = Part.makeCylinder(SLEEVE_OD/2.0, sleeve_h,
+                                     App.Vector(x, y, sleeve_bot))
+            bore = Part.makeCylinder(SLEEVE_BORE/2.0, bore_h,
+                                     App.Vector(x, y, sleeve_bot - 0.01))
+            lid = lid.fuse(tube).cut(bore)
+        lid = lid.removeSplitter()
+        log("  %d lid sleeves: %.2f tall, bore %.2f x %.2f deep, stop %.2f above PCB"
+            % (len(MOUNT_HOLES), sleeve_h, SLEEVE_BORE, bore_h, SLEEVE_GAP))
+
+    for x, y in LED_HOLES:
+        hole = Part.makeCylinder(LED_HOLE_D/2.0, LID_T + 2.0,
+                                 App.Vector(x, y, BASE_H - 1.0))
+        lid = lid.cut(hole)
+    lid = lid.removeSplitter()
+    log("  %d LED holes, %.2f mm dia, through the %.2f mm lid"
+        % (len(LED_HOLES), LED_HOLE_D, LID_T))
+
     for name, x0, x1, y0, y1 in RIM_NOTCH:
         c = cut_box(x0, x1, y0, y1, BASE_H - LIP_H - 0.50, BASE_H + 0.01)
         before = lid.Volume
@@ -288,6 +361,29 @@ try:
     log("  added %d snap beads, %.2f mm proud (%.2f mm engagement past the wall)"
         % (n, SNAP_PROT, SNAP_PROT - LIP_CLR))
 
+    # ---- lid top texture (cut before text so engravings stay deeper)
+    if TEX_ON:
+        import math
+        zt_ = BASE_H + LID_T
+        diag = math.hypot(OUT_L, OUT_W) + 4.0
+        n_t = int(diag / TEX_PITCH) + 2
+        bars = []
+        for k in range(-n_t, n_t + 1):
+            bar = Part.makeBox(diag, TEX_WIDTH, TEX_DEPTH + 1.0,
+                               App.Vector(-diag/2.0, k*TEX_PITCH - TEX_WIDTH/2.0,
+                                          zt_ - TEX_DEPTH))
+            bar.rotate(App.Vector(0, 0, zt_), App.Vector(0, 0, 1), TEX_ANGLE)
+            bars.append(bar)
+        tex = Part.makeCompound(bars)
+        for kx0, kx1, ky0, ky1 in TEX_KEEPOUT:
+            tex = tex.cut(cut_box(kx0, kx1, ky0, ky1,
+                                  zt_ - TEX_DEPTH - 0.5, zt_ + 1.0))
+        before = lid.Volume
+        lid = lid.cut(tex)
+        lid = lid.removeSplitter()
+        log("  texture: %d grooves @ %.2f pitch, %.2f deep, removed %.1f mm3"
+            % (len(bars), TEX_PITCH, TEX_DEPTH, before - lid.Volume))
+
     # ---- lid text (engraved)
     zt = BASE_H + LID_T
     total_h = len(TEXT_LINES) * TEXT_SIZE + (len(TEXT_LINES) - 1) * TEXT_GAP
@@ -308,6 +404,20 @@ try:
         y_cur -= (TEXT_SIZE + TEXT_GAP)
     lid = lid.removeSplitter()
 
+    for label, size, lx, ly in LABELS:
+        ss = Draft.make_shapestring(String=label, FontFile=TEXT_FONT,
+                                    Size=size, Tracking=0.0)
+        doc.recompute()
+        bb = ss.Shape.BoundBox
+        sol = ss.Shape.extrude(App.Vector(0, 0, LABEL_DEPTH + 1.0))
+        sol.translate(App.Vector(lx - bb.Center.x, ly - bb.Center.y,
+                                 zt - LABEL_DEPTH))
+        lid = lid.cut(sol)
+        log("  label '%s' %.2f wide at (%.2f, %.2f), %.2f deep"
+            % (label, bb.XLength, lx, ly, LABEL_DEPTH))
+        doc.removeObject(ss.Name)
+    lid = lid.removeSplitter()
+
     # ---- validate + export
     for nm, sh in (("base", base), ("lid", lid)):
         log("%s: solids=%d valid=%s volume=%.1f"
@@ -322,12 +432,28 @@ try:
     for nm, sh in (("case_v2_base", base), ("case_v2_lid", lid)):
         m = Mesh.Mesh()
         m.addFacets(sh.tessellate(0.05))
-        p = os.path.join(OUTDIR, nm + ".stl")
+        p = os.path.join(STL_DIR, nm + ".stl")
         m.write(p)
         log("wrote %s  (%d facets)" % (p, m.CountFacets))
 
-    doc.saveAs(os.path.join(OUTDIR, "case_v2.FCStd"))
+    doc.saveAs(os.path.join(FCSTD_DIR, "case_v2.FCStd"))
     log("wrote case_v2.FCStd")
+
+    # Emit the derived dimensions so the tools/ scripts never drift out of
+    # sync with this file. Every tool reads this, nothing hard-codes Z.
+    import json
+    params = dict(PCB_L=PCB_L, PCB_W=PCB_W, PCB_T=PCB_T, PCB_R=PCB_R,
+                  CLR=CLR, WALL=WALL, FLOOR_T=FLOOR_T, LID_T=LID_T,
+                  BASE_H=BASE_H, LIP_H=LIP_H, LIP_W=LIP_W, LIP_CLR=LIP_CLR,
+                  BOSS_H=BOSS_H, PEG_D=PEG_D,
+                  Z_PCB_BOT=Z_PCB_BOT, Z_PCB_TOP=Z_PCB_BOT + PCB_T,
+                  RIM_UNDERSIDE=BASE_H - LIP_H, TOTAL_H=BASE_H + LID_T,
+                  IN_L=IN_L, IN_W=IN_W, OUT_L=OUT_L, OUT_W=OUT_W,
+                  MOUNT_HOLES=MOUNT_HOLES, LED_HOLES=LED_HOLES,
+                  BAD_MODELS=["530480210 (height wrong)", "SOLID", "SOLID001", "SOLID002"])
+    with open(os.path.join(DESIGN_DIR, "case_v2_params.json"), "w") as f:
+        json.dump(params, f, indent=2)
+    log("wrote case_v2_params.json")
     log("OK")
 except Exception:
     log(traceback.format_exc())
