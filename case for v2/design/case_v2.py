@@ -138,7 +138,11 @@ RIM_NOTCH = [
 LID_CUTS = [
     # one large opening over the right-hand header cluster:
     # PinHeader_2x12 + both 1x01 AVDD/AVSS pins
-    ("header_block", 25.80, 37.50, -19.90, 19.20),
+    # extends right toward the edge in two steps: full width until the two
+    # +X lid sleeves start at X 44.12, then narrowed to pass between them
+    # and reach the rim inner face at X 48.30.
+    ("header_block",     25.80, 43.60, -19.90, 19.20),
+    ("header_block_ext", 43.40, 48.20, -15.50, 15.30),
     # the two SKRPABE010 tactile buttons
     ("button_lo",   -47.60, -41.90,  -8.80, -4.20),
     ("button_hi",   -47.60, -41.90,  10.70, 15.30),

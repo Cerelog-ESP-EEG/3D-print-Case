@@ -16,7 +16,8 @@ lid blank volume 8004.4
   4 lid sleeves: 4.44 tall, bore 2.30 x 1.70 deep, stop 0.10 above PCB
   3 LED holes, 1.20 mm dia, through the 1.60 mm lid
   notch minus_x_connectors in lid rim, removed 40.6 mm3
-  cut header_block   in lid, removed 732.0 mm3
+  cut header_block   in lid, removed 1113.6 mm3
+  cut header_block_ext in lid, removed 226.7 mm3
   cut button_lo      in lid, removed 41.9 mm3
   cut button_hi      in lid, removed 42.0 mm3
   cut header_1x02    in lid, removed 37.3 mm3
@@ -28,10 +29,10 @@ lid blank volume 8004.4
   label 'microSD' 16.75 wide at (-12.10, -18.80), 0.50 deep
 base: solids=1 valid=True volume=9205.3
       bbox 102.60 x 46.55 x 9.75  (Z 0.00..9.75)
-lid: solids=1 valid=True volume=7109.8
+lid: solids=1 valid=True volume=6501.5
       bbox 102.60 x 46.55 x 6.04  (Z 5.31..11.35)
 wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_base.stl  (7810 facets)
-wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_lid.stl  (34312 facets)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_lid.stl  (34328 facets)
 wrote case_v2.FCStd
 wrote case_v2_params.json
 OK
