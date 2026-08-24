@@ -23,9 +23,9 @@ lid blank volume 8004.4
   text 'ESP-EEG V2' width 56.85 at y -8.50
 base: solids=1 valid=True volume=11128.1
       bbox 102.60 x 46.55 x 10.20  (Z 0.00..10.20)
-lid: solids=1 valid=True volume=6951.5
+lid: solids=1 valid=True volume=6894.1
       bbox 102.60 x 46.55 x 2.80  (Z 9.00..11.80)
 wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/case_v2_base.stl  (7810 facets)
-wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/case_v2_lid.stl  (15248 facets)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/case_v2_lid.stl  (16564 facets)
 wrote case_v2.FCStd
 OK

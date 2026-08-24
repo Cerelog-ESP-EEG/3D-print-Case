@@ -122,7 +122,7 @@ LID_CUTS = [
 TEXT_FONT  = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 TEXT_LINES = ["Cerelog", "ESP-EEG V2"]
 TEXT_SIZE  = 7.0
-TEXT_DEPTH  = 0.60                # engraving depth into lid top
+TEXT_DEPTH  = 0.80                # engraving depth: half of LID_T
 TEXT_CX    = -8.00                # centre of the free lid area
 TEXT_GAP   = 3.00                 # line spacing
 
