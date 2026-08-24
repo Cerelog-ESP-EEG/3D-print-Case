@@ -6,10 +6,10 @@ base shell volume 9603.4
 after 4 peg standoffs (boss 2.50 + peg 2.71), volume 9795.1
   cut usb_c          on -X wall, removed 160.1 mm3
   cut battery_cable  on -X wall, removed 96.4 mm3
-  cut slide_switch   on -Y wall, removed 41.8 mm3
+  cut slide_switch   on -Y wall, removed 78.5 mm3
   cut microsd        on -Y wall, removed 100.2 mm3
   cut 6 snap grooves, 0.55 mm deep into the 1.60 mm wall
-  thin switch_thin   on -Y wall to 0.60 mm, removed 39.7 mm3
+  thin switch_thin   on -Y wall to 0.60 mm, removed 38.5 mm3
   thin microsd_thin  on -Y wall to 0.80 mm, removed 53.3 mm3
   thin minus_x_ports on -X wall to 0.70 mm, removed 56.8 mm3
 lid blank volume 8004.4
@@ -27,12 +27,12 @@ lid blank volume 8004.4
   label 'ON' 5.76 wide at (-38.00, -18.80), 0.50 deep
   label 'OFF' 7.99 wide at (-27.00, -18.80), 0.50 deep
   label 'microSD' 16.75 wide at (-12.10, -18.80), 0.50 deep
-base: solids=1 valid=True volume=9205.3
+base: solids=1 valid=True volume=9172.7
       bbox 102.60 x 46.55 x 9.75  (Z 0.00..9.75)
-lid: solids=1 valid=True volume=6501.5
+lid: solids=1 valid=True volume=6500.6
       bbox 102.60 x 46.55 x 6.04  (Z 5.31..11.35)
 wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_base.stl  (7810 facets)
-wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_lid.stl  (34328 facets)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for v2/stl/case_v2_lid.stl  (34332 facets)
 wrote case_v2.FCStd
 wrote case_v2_params.json
 OK

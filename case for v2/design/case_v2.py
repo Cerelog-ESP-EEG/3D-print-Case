@@ -78,7 +78,9 @@ OUT_R      = IN_R + WALL
 WALL_CUTS = [
     ("usb_c",        "-X",  -5.80,   8.60, -0.90, 6.40),
     ("battery_cable","-X", -16.60,  -8.40, -1.30, 6.40),
-    ("slide_switch", "-Y", -37.60, -28.60,  0.60, 3.50),
+    # open to the top of the wall: MK-12C02-G020 protrudes 0.695 mm
+    # into the wall, so the board cannot drop in past a closed slot.
+    ("slide_switch", "-Y", -37.60, -28.60,  0.60, 6.20),
     ("microsd",      "-Y", -20.80,  -3.40,  0.35, 3.95),
 ]
 
@@ -93,7 +95,7 @@ FLOOR_RELIEF = []
 # The slide switch passes the board edge by only 1.00 mm and the microSD
 # socket mouth by 0.07 mm, so full-thickness wall buries both.
 WALL_THIN = [
-    ("switch_thin", "-Y", -40.00, -26.00, -0.20, 4.50, 0.60),
+    ("switch_thin", "-Y", -40.00, -26.00, -0.20, 6.20, 0.60),
     ("microsd_thin","-Y", -24.00,  -0.50, -0.50, 5.00, 0.80),
     ("minus_x_ports","-X", -19.00, 11.00, -1.40, 6.40, 0.70),
 ]
@@ -104,8 +106,18 @@ WALL_THIN = [
 SNAP_PROT   = 0.45                # bead sticks this far off the rim face
 SNAP_Z      = BASE_H - LIP_H + 0.60   # apex, measured up from rim bottom
 SNAP_HALF   = 0.325               # bead half-height, so 0.65 tall overall
-SNAP_LEN    = 14.00               # length of each segment
-SNAP_X      = [-30.0, 0.0, 30.0]  # segment centres, both long walls
+# (wall sign, x centre, length). -1 = -Y wall, +1 = +Y wall.
+# The -Y wall must dodge the switch notch (X -40.00..-26.00) and the
+# microSD thinned zone (X -24.00..-0.50); a groove there would leave only
+# 0.25 mm of wall. The +Y wall is unobstructed.
+SNAP_SEGS = [
+    (-1, -44.80,  8.00),
+    (-1,  12.00, 14.00),
+    (-1,  34.00, 14.00),
+    ( 1, -30.00, 14.00),
+    ( 1,   0.00, 14.00),
+    ( 1,  30.00, 14.00),
+]
 SNAP_GROOVE_D = 0.55              # groove depth into the 1.60 mm wall
 SNAP_GROOVE_PAD = 0.10            # groove is this much taller than the bead
 
@@ -196,7 +208,7 @@ def cut_box(x0, x1, y0, y1, z0, z1):
     import Part, FreeCAD as App
     return Part.makeBox(x1-x0, y1-y0, z1-z0, App.Vector(x0, y0, z0))
 
-def snap_bead(sign, xc):
+def snap_bead(sign, xc, length):
     """Triangular bead on the lid rim's outer face. sign = -1 (-Y) or +1 (+Y)."""
     import Part, FreeCAD as App
     y_r = sign * (IN_W/2.0 - LIP_CLR)          # rim outer face
@@ -206,15 +218,15 @@ def snap_bead(sign, xc):
            App.Vector(0, y_r, SNAP_Z + SNAP_HALF)]
     wire = Part.makePolygon(pts + [pts[0]])
     face = Part.Face(wire)
-    sol = face.extrude(App.Vector(SNAP_LEN, 0, 0))
-    sol.translate(App.Vector(xc - SNAP_LEN/2.0, 0, 0))
+    sol = face.extrude(App.Vector(length, 0, 0))
+    sol.translate(App.Vector(xc - length/2.0, 0, 0))
     return sol
 
-def snap_groove(sign, xc):
+def snap_groove(sign, xc, length):
     """Matching groove cut into the base cavity wall."""
     y_w = sign * IN_W/2.0                      # cavity inner face
     y0, y1 = sorted([y_w, y_w + sign * SNAP_GROOVE_D])
-    return cut_box(xc - SNAP_LEN/2.0 - 0.40, xc + SNAP_LEN/2.0 + 0.40,
+    return cut_box(xc - length/2.0 - 0.40, xc + length/2.0 + 0.40,
                    y0, y1,
                    SNAP_Z - SNAP_HALF - SNAP_GROOVE_PAD,
                    SNAP_Z + SNAP_HALF + SNAP_GROOVE_PAD)
@@ -290,11 +302,9 @@ try:
         base = base.cut(c)
         log("  cut %-14s on %s wall, removed %.1f mm3" % (name, wall, before - base.Volume))
     n = 0
-    for sign in (-1, 1):
-        for xc in SNAP_X:
-            before = base.Volume
-            base = base.cut(snap_groove(sign, xc))
-            n += 1
+    for sign, xc, ln in SNAP_SEGS:
+        base = base.cut(snap_groove(sign, xc, ln))
+        n += 1
     base = base.removeSplitter()
     log("  cut %d snap grooves, %.2f mm deep into the %.2f mm wall"
         % (n, SNAP_GROOVE_D, WALL))
@@ -357,10 +367,9 @@ try:
     lid = lid.removeSplitter()
 
     n = 0
-    for sign in (-1, 1):
-        for xc in SNAP_X:
-            lid = lid.fuse(snap_bead(sign, xc))
-            n += 1
+    for sign, xc, ln in SNAP_SEGS:
+        lid = lid.fuse(snap_bead(sign, xc, ln))
+        n += 1
     lid = lid.removeSplitter()
     log("  added %d snap beads, %.2f mm proud (%.2f mm engagement past the wall)"
         % (n, SNAP_PROT, SNAP_PROT - LIP_CLR))

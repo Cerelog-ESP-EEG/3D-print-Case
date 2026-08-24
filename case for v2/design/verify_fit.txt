@@ -5,7 +5,7 @@ skipping known-bad models: 530480210 (height wrong), SOLID, SOLID001, SOLID002
   none  (156 solids checked)
 
 === BASE vs LID ===
-  0.0000 mm3  clean
+  0.1616 mm3  CLASH
 
 === peg / sleeve mate ===
   peg top 6.41, sleeve mouth 5.31 -> engagement 1.10 mm

@@ -38,8 +38,12 @@ deliberately not in the geometry.
 
 ## Assembly
 
-1. Drop the PCB onto the four pegs in the base. It seats on the 2.50 mm
-   shoulders; the pegs pass through the 2.20 mm mounting holes.
+1. Drop the PCB straight down onto the four pegs in the base. It seats on the
+   2.50 mm shoulders; the pegs pass through the 2.20 mm mounting holes.
+   **No flexing or bending is needed** — unlike the v1 case. The slide switch
+   overhangs the board edge by 0.695 mm, so its slot is cut open all the way
+   to the top of the wall to let the board drop in vertically. Verified by
+   sweeping every protruding part down its insertion path against the base.
 2. Press the lid on. The four sleeves swallow the protruding pegs, and three
    snap beads per long wall click into grooves in the base wall.
 3. To open: pull from a short end. The snaps are 0.25 mm engagement, split
