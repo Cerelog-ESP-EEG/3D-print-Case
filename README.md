@@ -4,7 +4,7 @@ This repository contains the files and instructions for a custom 3D-printed encl
 
 ## Preview for v2 Case Below
 
-| <img src="v2case2.webp" width="230"> 
+| <img src="v2case2.webp" width="460"> 
 
 ## Preview for v1 Case Below
 
