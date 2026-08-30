@@ -1,8 +1,12 @@
 # 3D-Printed Case
 
-This repository contains the files and instructions for a custom 3D-printed enclosure designed for the **Cerelog ESP-EEG**.
+This repository contains the files and instructions for a custom 3D-printed enclosure designed for the **Cerelog ESP-EEG for both V1 and V2 devices**.
 
-## Preview
+## Preview for v2 Case Below
+
+| <img src="v2case2.webp" width="230"> 
+
+## Preview for v1 Case Below
 
 | | | |
 | :---: | :---: | :---: |
