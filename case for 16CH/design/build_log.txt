@@ -1,0 +1,42 @@
+=== Cerelog ESP-EEG 16CH case ===
+outer     120.30 x 50.67 x 10.05 (base+lid = 11.65)
+cavity    117.10 x 47.47, corner R 3.30
+PCB sits at Z 4.20 .. 5.71
+DIP switch underside at Z 1.82 (floor outer face is Z 0.00)
+base shell volume 11941.6
+after 4 peg standoffs (boss 3.00 + peg 2.71), volume 12165.1
+  floor cut dip_switch_1  12.90 x 9.70 mm, removed 150.2 mm3
+  floor cut dip_switch_2  12.90 x 9.70 mm, removed 150.2 mm3
+  cut usb_c          on -X wall, removed 119.9 mm3
+  cut battery_cable  on -X wall, removed 74.4 mm3
+  cut slide_switch   on -Y wall, removed 89.7 mm3
+  cut microsd        on -Y wall, removed 115.4 mm3
+  cut 9 snap grooves, 0.55 mm deep into the 1.60 mm wall
+  thin switch_thin   on -Y wall to 0.60 mm, removed 16.5 mm3
+  thin microsd_thin  on -Y wall to 0.80 mm, removed 39.1 mm3
+  thin minus_x_ports on -X wall to 0.70 mm, removed 53.9 mm3
+lid blank volume 10178.6
+  4 lid sleeves: 4.24 tall, bore 2.30 x 1.70 deep, stop 0.10 above PCB
+  3 LED holes, 1.20 mm dia, through the 1.60 mm lid
+  notch minus_x_connectors in lid rim, removed 39.7 mm3
+  cut header_2x40    in lid, removed 673.9 mm3
+  cut header_1x02    in lid, removed 39.9 mm3
+  cut header_1x01a   in lid, removed 23.7 mm3
+  cut header_1x01b   in lid, removed 23.7 mm3
+  cut button_lo      in lid, removed 46.1 mm3
+  cut button_hi      in lid, removed 46.1 mm3
+  added 9 snap beads, 0.45 mm proud (0.25 mm engagement past the wall)
+  text 'Cerelog' width 35.28 at y 14.50
+  text 'ESP-EEG 16CH' width 69.63 at y 4.50
+  label 'ON' 5.76 wide at (-49.00, -21.20), 0.50 deep
+  label 'OFF' 7.99 wide at (-34.50, -21.20), 0.50 deep
+  label 'microSD' 16.75 wide at (-20.95, -21.20), 0.50 deep
+base: solids=1 valid=True volume=11304.9
+      bbox 120.30 x 50.67 x 10.05  (Z 0.00..10.05)
+lid: solids=1 valid=True volume=9316.6
+      bbox 120.30 x 50.67 x 5.84  (Z 5.81..11.65)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_base.stl  (7900 facets)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_lid.stl  (37648 facets)
+wrote case_16ch.FCStd
+wrote case_16ch_params.json
+OK

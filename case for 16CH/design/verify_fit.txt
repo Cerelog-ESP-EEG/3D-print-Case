@@ -1,0 +1,39 @@
+case  120.30 x 50.67 x 11.65    PCB underside at Z 4.20
+skipping known-bad models: 530480210 (height wrong), SOLID, SOLID001, SOLID002
+
+=== BOARD vs CASE (intersection > 0.001 mm3) ===
+  none  (220 solids checked)
+
+=== BASE vs LID ===
+  0.0000 mm3  clean
+
+=== peg / sleeve mate ===
+  peg top 6.91, sleeve mouth 5.81 -> engagement 1.10 mm
+  peg ( -54.86, -19.77)  obstruction 0.0000 mm3  clear
+  peg (  55.05, -19.77)  obstruction 0.0000 mm3  clear
+  peg ( -54.86,  19.50)  obstruction 0.0000 mm3  clear
+  peg (  55.05,  19.50)  obstruction 0.0000 mm3  clear
+
+=== LED holes clear through the lid ===
+  LED ( -26.50,   1.10)  obstruction 0.0000 mm3  open
+  LED ( -48.45, -18.05)  obstruction 0.0000 mm3  open
+  LED ( -33.10,  -5.50)  obstruction 0.0000 mm3  open
+
+=== DIP switch access through the floor ===
+  DHA-08TQR      footprint 11.29 x  8.10  floor obstruction   0.0000 mm3  open
+  DHA-08TQR001   footprint 11.29 x  8.10  floor obstruction   0.0000 mm3  open
+  switch underside sits at Z 1.82; floor outer face is Z 0.00
+  -> recessed 1.82 mm inside the opening (operate with a pen tip)
+
+=== port alignment (connector footprint swept out through its wall) ===
+  TYPE-C-16PIN-2MD-073   -X  USB-C                obstruction    0.000 mm3  clear
+  530480210              -X  battery / PicoBlade  obstruction    0.000 mm3  clear
+  MK-12C02-G020          -Y  power slide switch   obstruction    0.000 mm3  clear
+  TF-SMD_TF-01A          -Y  microSD socket       obstruction    0.000 mm3  clear
+
+=== printability spot-checks ===
+  wall 1.60, thinned to 0.60 (switch) / 0.80 (microSD) / 0.70 (-X ports)
+  lid ledge over the -Y wall where the header opening removes the rim:
+      1.735 mm of lid plate on a 1.60 mm wall
+
+RESULT: PASS
