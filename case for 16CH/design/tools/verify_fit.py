@@ -165,6 +165,36 @@ try:
       % (P["LID_T"] - max(e["depth"] for e in P["ENGRAVINGS"])))
 
     w("")
+    w("=== bottom-face engraving vs floor thickness ===")
+    for e in P.get("BOTTOM_ENGRAVINGS", []):
+        keep = P["FLOOR_T"] - e["depth"]     # material that must remain
+        clash = []
+        for name, cx0, cx1, cy0, cy1 in P["FLOOR_CUTS"]:
+            if e["x0"] < cx1 and e["x1"] > cx0 and e["y0"] < cy1 and e["y1"] > cy0:
+                clash.append(name)
+        box = Part.makeBox(e["x1"] - e["x0"], e["y1"] - e["y0"], keep,
+                           App.Vector(e["x0"], e["y0"], e["depth"]))
+        leak = box.cut(base).Volume
+        bad = leak > THRESHOLD
+        eng_fail += bad
+        w("  %-14s %.2f deep of %.2f -> %.2f mm must remain, Z %.2f..%.2f"
+          % ("'" + e["text"] + "'", e["depth"], P["FLOOR_T"], keep,
+             e["depth"], P["FLOOR_T"]))
+        w("                 void under it %8.4f mm3  %s%s"
+          % (leak, "PERFORATED" if bad else "solid",
+             ("  [overlaps %s]" % ", ".join(clash)) if clash else ""))
+        # gap to the nearest DIP switch opening
+        gaps = []
+        for name, cx0, cx1, cy0, cy1 in P["FLOOR_CUTS"]:
+            if e["x1"] <= cx0:
+                gaps.append((cx0 - e["x1"], name))
+            elif e["x0"] >= cx1:
+                gaps.append((e["x0"] - cx1, name))
+        if gaps:
+            g, nm = min(gaps)
+            w("                 %.2f mm of floor between it and %s" % (g, nm))
+
+    w("")
     w("=== printability spot-checks ===")
     # thinnest standing wall left by the thinning operations
     w("  wall %.2f, thinned to 0.60 (switch) / 0.80 (microSD) / 0.70 (-X ports)"

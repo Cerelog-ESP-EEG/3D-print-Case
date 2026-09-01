@@ -221,6 +221,38 @@ LABELS = [
     ("microSD", 3.00, -20.95, -21.20),
 ]
 
+
+# --- bottom-face engraving: DIP switch mode legend
+# Engraved into the OUTSIDE of the base floor (Z 0), flanking the two DIP
+# switch openings. Mirrored in Y: you read the bottom of a long case by
+# rolling it toward you about its LONG axis, which preserves X (so left/right
+# stay put) and flips Y. The glyphs are therefore mirrored in Y only.
+# 'SRB1 Mode' is on the +X side, 'Diff Mode' on -X.
+BOT_TEXT_ON     = True
+BOT_TEXT_SIZE   = 2.60
+BOT_TEXT_DEPTH  = 0.50            # into the 1.20 floor -> 0.70 mm left under it
+BOT_LINE_GAP    = 0.90
+BOT_TEXT_CY     = -7.566          # centre of the DHA-08TQR band (Y -11.62..-3.52)
+# 'SRB1 Mode' is 19.89 mm on one line at this size, but only 19.70 mm exists
+# between the right-hand switch opening (X 38.30) and the case edge. Stacked
+# over two lines the block is 9.08 mm and the arrow fits beside it.
+# (lines, side, anchor X, arrow direction)
+BOT_GROUPS = [
+    (["Diff", "Mode"], "left",  -11.00, -1),
+    (["SRB1", "Mode"], "right",  40.50, +1),
+]
+BOT_ARROW_LEN    = 5.00
+BOT_ARROW_SHAFT  = 0.70
+BOT_ARROW_HEAD_L = 2.20
+BOT_ARROW_HEAD_W = 1.60           # half-width across the barbs
+BOT_ARROW_GAP    = 1.60           # between the text block and the arrow
+BOT_ROT          = 90.0           # rotate each group about its own centre.
+                                  # 90 puts the arrows along +/-Y, which is the
+                                  # axis the DHA-08TQR actuators actually travel
+                                  # (8 actuators in a row along X, each sliding
+                                  # in Y). Set -90 to swap which Y direction
+                                  # each mode points to.
+
 # --- lid top texture: fine diagonal grooves
 TEX_ON      = False               # see README: use a textured build plate
 TEX_DEPTH   = 0.25
@@ -314,6 +346,24 @@ def wall_cut_solid(wall, a0, a1, z0, z1):
         return cut_box(a0, a1, IN_W/2 - 1.0, OUT_W/2 + over, bz(z0), bz(z1))
     raise ValueError(wall)
 
+
+def arrow_profile(direction, length):
+    """Flat arrow polygon pointing +X (direction=1) or -X (-1), tail at x=0."""
+    import Part, FreeCAD as App
+    d = float(direction)
+    t  = BOT_ARROW_SHAFT / 2.0
+    hl = BOT_ARROW_HEAD_L
+    hw = BOT_ARROW_HEAD_W
+    xs = lambda v: d * v
+    pts = [App.Vector(xs(0.0),        -t,  0),
+           App.Vector(xs(length-hl),  -t,  0),
+           App.Vector(xs(length-hl),  -hw, 0),
+           App.Vector(xs(length),      0,  0),
+           App.Vector(xs(length-hl),   hw, 0),
+           App.Vector(xs(length-hl),   t,  0),
+           App.Vector(xs(0.0),         t,  0)]
+    return Part.Face(Part.makePolygon(pts + [pts[0]]))
+
 # ---------------------------------------------------------------------- main
 try:
     import FreeCAD as App, Part, Draft, Mesh
@@ -384,6 +434,71 @@ try:
         log("  thin %-13s on %s wall to %.2f mm, removed %.1f mm3"
             % (name, wall, keep, before - base.Volume))
     base = base.removeSplitter()
+
+
+    # ---- bottom-face engraving: DIP switch mode legend
+    BOT_ENGRAVED = []
+    if BOT_TEXT_ON:
+        import Part as _P
+        for lines, side, anchor, adir in BOT_GROUPS:
+            shapes, widths = [], []
+            for ln in lines:
+                ss = Draft.make_shapestring(String=ln, FontFile=TEXT_FONT,
+                                            Size=BOT_TEXT_SIZE, Tracking=0.0)
+                doc.recompute()
+                shapes.append(ss.Shape.copy()); widths.append(ss.Shape.BoundBox.XLength)
+                doc.removeObject(ss.Name)
+            block_w = max(widths)
+            heights = [sh.BoundBox.YLength for sh in shapes]
+            block_h = sum(heights) + BOT_LINE_GAP * (len(shapes) - 1)
+            bx0 = anchor if side == "right" else anchor - block_w
+
+            group = []
+            y_top = BOT_TEXT_CY + block_h / 2.0
+            for sh, w, h in zip(shapes, widths, heights):
+                bb = sh.BoundBox
+                sh.translate(App.Vector(bx0 + (block_w - w)/2.0 - bb.XMin,
+                                        y_top - h - bb.YMin, -bb.ZMin))
+                group.append(sh)
+                y_top -= (h + BOT_LINE_GAP)
+
+            a_tail = (bx0 + block_w + BOT_ARROW_GAP) if side == "right" \
+                     else (bx0 - BOT_ARROW_GAP)
+            arw = arrow_profile(adir, BOT_ARROW_LEN)
+            arw.translate(App.Vector(a_tail, BOT_TEXT_CY, 0))
+            group.append(arw)
+
+            comp = group[0]
+            for g in group[1:]:
+                comp = comp.fuse(g)
+            # Rotating by BOT_ROT and then mirroring in Y is a single
+            # reflection, so do it as one mirror. Composing them as two ops
+            # does NOT work: Shape.rotate()/rotated() only sets a placement,
+            # and Shape.mirror() ignores placement -- the rotation was being
+            # silently discarded.
+            #   (rotate th) then (y -> -y)  ==  reflect about the line at -th/2
+            #   plane normal = (sin(th/2), cos(th/2), 0)
+            #   th=0  -> (0,1,0), the plain Y mirror
+            #   th=90 -> (1,1,0), i.e. reflect about y = -x
+            import math as _m
+            _h = _m.radians(BOT_ROT / 2.0)
+            c = comp.BoundBox.Center
+            comp = comp.mirror(App.Vector(c.x, c.y, 0),
+                               App.Vector(_m.sin(_h), _m.cos(_h), 0))
+            sol = comp.extrude(App.Vector(0, 0, BOT_TEXT_DEPTH + 1.0))
+            sol.translate(App.Vector(0, 0, -1.0))
+            before = base.Volume
+            base = base.cut(sol)
+            gb = comp.BoundBox
+            BOT_ENGRAVED.append(dict(text=" ".join(lines) + (" >" if adir > 0 else " <"),
+                                     depth=BOT_TEXT_DEPTH,
+                                     x0=gb.XMin, x1=gb.XMax, y0=gb.YMin, y1=gb.YMax))
+            log("  bottom '%s' X %.2f..%.2f  Y %.2f..%.2f  (%.2f deep, %.2f left under it), removed %.1f mm3"
+                % (" ".join(lines), gb.XMin, gb.XMax, gb.YMin, gb.YMax,
+                   BOT_TEXT_DEPTH, FLOOR_T - BOT_TEXT_DEPTH, before - base.Volume))
+        base = base.removeSplitter()
+        log("  base after bottom engraving: valid=%s solids=%d"
+            % (base.isValid(), len(base.Solids)))
 
     # ---- LID
     lid = rbox(OUT_L, OUT_W, LID_T, OUT_R, BASE_H)
@@ -550,6 +665,7 @@ try:
                   MOUNT_HOLES=MOUNT_HOLES, LED_HOLES=LED_HOLES,
                   FLOOR_CUTS=FLOOR_CUTS, LID_CUTS=LID_CUTS,
                   ENGRAVINGS=ENGRAVED, LED_HOLE_D=LED_HOLE_D,
+                  BOTTOM_ENGRAVINGS=BOT_ENGRAVED,
                   DIP_SWITCHES=[["DHA-08TQR",    -7.995,  3.295, -11.616, -3.516],
                                 ["DHA-08TQR001", 26.205, 37.495, -11.616, -3.516]],
                   DIP_BOTTOM_Z=Z_PCB_BOT - 2.385,

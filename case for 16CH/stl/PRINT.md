@@ -4,7 +4,7 @@
 
 | File | What it is |
 |---|---|
-| `case_16ch_base.stl` | Bottom half. Walls, floor, 4 press-fit pegs, all port openings, 2 DIP switch holes. |
+| `case_16ch_base.stl` | Bottom half. Walls, floor, 4 press-fit pegs, all port openings, 2 DIP switch holes, mode legend on the outside face. |
 | `case_16ch_lid.stl`  | Top half. Engraving, LED holes, snap beads, 4 sleeves. |
 
 Assembled size **120.30 x 50.67 x 11.65 mm**. No screws, no hardware.
@@ -59,6 +59,27 @@ deliberately not in the geometry.
 
 Both `DHA-08TQR` 8-position switches face **downward, out through the base**.
 Their openings are 12.90 x 9.70 mm.
+
+The outside of the base is engraved either side of the openings, 0.50 mm deep
+into the 1.20 mm floor:
+
+```
+     D M                                        S M
+     i o     [ SW1 ]          [ SW2 ]           R o
+     f d                                        B d
+     f e                                        1 e
+      |                                          ^
+      v                                          |
+```
+
+Both legends are **rotated 90 deg**, so the arrows run along **+/-Y** — the
+axis the DHA-08TQR actuators actually travel (8 actuators in a row along X,
+each sliding in Y). `Diff Mode` is on the -X side, `SRB1 Mode` on the +X side.
+
+The legend is **mirrored**, so it reads correctly when you roll the case over
+about its long axis — the way you would naturally turn a 120 mm case to reach
+the switches. `SRB1 Mode` is then on your right. Each group is 6.9 mm clear of
+its opening.
 
 The switch bodies sit **1.82 mm inside** the opening — they are not flush with
 the outside of the case. Set them with a pen tip or a small screwdriver. This

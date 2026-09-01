@@ -44,6 +44,14 @@ skipping known-bad models: 530480210 (height wrong), SOLID, SOLID001, SOLID002
                void under it   0.0000 mm3  solid
   thinnest point of the lid anywhere under an engraving: 0.80 mm
 
+=== bottom-face engraving vs floor thickness ===
+  'Diff Mode <'  0.50 deep of 1.20 -> 0.70 mm must remain, Z 0.50..1.20
+                 void under it   0.0000 mm3  solid
+                 6.94 mm of floor between it and dip_switch_1
+  'SRB1 Mode >'  0.50 deep of 1.20 -> 0.70 mm must remain, Z 0.50..1.20
+                 void under it   0.0000 mm3  solid
+                 6.92 mm of floor between it and dip_switch_2
+
 === printability spot-checks ===
   wall 1.60, thinned to 0.60 (switch) / 0.80 (microSD) / 0.70 (-X ports)
   lid ledge over the -Y wall where the header opening removes the rim:

@@ -84,11 +84,26 @@ def render(items,elev,azim,bg=(1.0,1.0,1.0)):
         img[Y0:Y1+1,X0:X1+1][upd]=C[i]
     return img
 
+def roll_long_axis(item):
+    """Roll the part over about its LONG (X) axis: (x,y,z) -> (x,-y,-z).
+
+    This is how you physically turn a 120 mm case over to reach the DIP
+    switches, and it is the frame the bottom legend is mirrored for. Winding
+    is reversed by the flip, so two vertices are swapped to keep normals out.
+    """
+    tri, _ = item
+    t = tri * np.array([1.0, -1.0, -1.0])
+    t = t[:, [0, 2, 1], :]
+    e1 = t[:,1]-t[:,0]; e2 = t[:,2]-t[:,0]
+    n = np.cross(e1,e2); ln = np.linalg.norm(n,axis=1,keepdims=True); ln[ln==0]=1
+    return t, n/ln
+
 base=load(_paths.BASE_STL); lid=load(_paths.LID_STL)
+base_rolled=roll_long_axis(base)
 pcb=load(S+"_pv_pcb.stl"); comp=load(S+"_pv_comp.stl")
 lidup=load(_paths.LID_STL,dz=22.0)
 CB=(0.62,0.66,0.72); CL=(0.74,0.78,0.84); CP=(0.10,0.48,0.30); CC=(0.80,0.78,0.73)
-B=(*base,CB); L=(*lid,CL); LU=(*lidup,CL); PB=(*pcb,CP); CM=(*comp,CC)
+B=(*base,CB); BR=(*base_rolled,CB); L=(*lid,CL); LU=(*lidup,CL); PB=(*pcb,CP); CM=(*comp,CC)
 
 specs=[
  ("Base, populated",                [B,PB,CM], 32,-128),
@@ -96,7 +111,7 @@ specs=[
  ("Lid top - engraving + LED holes",[L],       62,-96),
  ("Lid underside - sleeves + snaps",[L],     -52,-84),
  ("Exploded assembly",              [B,PB,CM,LU],26,-128),
- ("Base underside - DIP switch access", [B], -62,-96),
+ ("Case rolled over - DIP switch mode legend", [BR], 68,-90),
 ]
 fig=plt.figure(figsize=(17,10.5),facecolor='white')
 for i,(t,items,el,az) in enumerate(specs,1):

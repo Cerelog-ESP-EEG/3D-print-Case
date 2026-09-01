@@ -89,7 +89,7 @@ pins vary a lot with how they are trimmed.
 DIP switch height in particular is worth checking — it is now the part that
 sets the standoff.
 
-## 6. Lid STL has 24 self-intersecting facet pairs — benign, print it
+## 6. Both STLs have self-intersecting facet pairs — benign, print them
 
 `case_16ch_lid.stl` is **watertight, manifold, correctly oriented, and its
 mesh volume matches the solid exactly** (9140.0 vs 9140.0 mm3) — but carries
@@ -102,9 +102,10 @@ in the same strings. The count rose from 16 when the title was shrunk from
 7.0 mm to 4.5 mm; smaller glyphs tessellate into more slivers. It is the same
 benign class of defect either way.
 
-The engraving is **verified not to perforate the lid** — `verify_fit.py`
-measures the void under every engraved string and reports 0.0000 mm3 for all
-five. Thinnest point under any engraving is 0.80 mm of 1.60 mm.
+No engraving perforates either part — `verify_fit.py` measures the void under
+every engraved string and reports 0.0000 mm3 for all seven. Thinnest remaining
+material is 0.80 mm under the lid title (of 1.60 mm) and 0.70 mm under the
+bottom mode legend (of 1.20 mm).
 
 **Do not run FreeCAD's mesh repair on it.** On V2 the sequence
 `fixSelfIntersections` / `removeFoldsOnSurface` deleted real geometry and
@@ -114,7 +115,11 @@ broke solidity.
 what slicers actually need. If a slicer refuses, the one-line fallback is to
 empty `LABELS` in `case_16ch.py` and rebuild.
 
-`case_16ch_base.stl` is completely clean on every check.
+`case_16ch_base.stl` carries **42** pairs, all in Z 0.00..0.50 — the band of
+the bottom-face mode legend, i.e. the same glyph-tessellation defect. It was
+completely clean before that legend was added. Both parts are watertight,
+manifold, correctly oriented, and match their solid volumes
+(base 11277.4 vs 11277.6, lid 9140.0 vs 9139.9 mm3).
 
 ## 7. Side-wall texture — not done, deliberately
 
