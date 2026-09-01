@@ -66,6 +66,10 @@ face, so the opening for it has to take the rim with it. Over X 0.30..52.30
 the lid has no rim — just a 1.735 mm ledge of plate sitting on the 1.60 mm
 base wall.
 
+The opening is Y -23.60..-12.40, i.e. **11.20 mm** across a 5.08 mm header
+body. It was widened 4.00 mm inboard on purpose, for finger room when seating
+ribbon cables; the outer edge stayed at the wall.
+
 Consequences, all accepted deliberately:
 
 - No snap segments are possible on the -Y wall over that span. Retention there
@@ -85,16 +89,22 @@ pins vary a lot with how they are trimmed.
 DIP switch height in particular is worth checking — it is now the part that
 sets the standoff.
 
-## 6. Lid STL has 16 self-intersecting facet pairs — benign, print it
+## 6. Lid STL has 24 self-intersecting facet pairs — benign, print it
 
 `case_16ch_lid.stl` is **watertight, manifold, correctly oriented, and its
-mesh volume matches the solid exactly** (9316.7 vs 9316.6 mm3) — but carries
-16 self-intersecting facet pairs.
+mesh volume matches the solid exactly** (9140.0 vs 9140.0 mm3) — but carries
+24 self-intersecting facet pairs.
 
-All of them sit between Z 10.95 and 11.65, i.e. inside the engraved lettering:
-the `microSD` label and part of the title. This is FreeCAD's ShapeString glyph
-tessellation, not the case geometry — the same defect V2 had, in the same
-strings.
+All of them sit between Z 10.90 and 11.65, i.e. inside the engraved lettering:
+the `ON`/`OFF`/`microSD` label row and the title block. This is FreeCAD's
+ShapeString glyph tessellation, not the case geometry — the same defect V2 had,
+in the same strings. The count rose from 16 when the title was shrunk from
+7.0 mm to 4.5 mm; smaller glyphs tessellate into more slivers. It is the same
+benign class of defect either way.
+
+The engraving is **verified not to perforate the lid** — `verify_fit.py`
+measures the void under every engraved string and reports 0.0000 mm3 for all
+five. Thinnest point under any engraving is 0.80 mm of 1.60 mm.
 
 **Do not run FreeCAD's mesh repair on it.** On V2 the sequence
 `fixSelfIntersections` / `removeFoldsOnSurface` deleted real geometry and

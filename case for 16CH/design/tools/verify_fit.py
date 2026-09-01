@@ -131,6 +131,39 @@ try:
           % (lbl[:22], wall, what, c.Volume,
              "BLOCKED" if blocked else "clear"))
 
+    # ---- Does any engraving cut through the lid?
+    # Measured, not assumed. For each engraved string, the slab of lid from the
+    # plate underside up to the engraving floor must be COMPLETELY solid. If a
+    # cut perforated, box.cut(lid) would come back with volume.
+    w("")
+    w("=== engraving vs lid thickness (does the text cut through?) ===")
+    z_lo = P["BASE_H"]                      # underside of the lid plate
+    eng_fail = 0
+    for e in P["ENGRAVINGS"]:
+        keep = P["LID_T"] - e["depth"]      # material that must remain
+        z_hi = z_lo + keep
+        # guard: a real opening inside the footprint would leak legitimately
+        clash = []
+        for name, cx0, cx1, cy0, cy1 in P["LID_CUTS"]:
+            if e["x0"] < cx1 and e["x1"] > cx0 and e["y0"] < cy1 and e["y1"] > cy0:
+                clash.append(name)
+        r = P["LED_HOLE_D"] / 2.0
+        for lx, ly in P["LED_HOLES"]:
+            if (e["x0"] - r) < lx < (e["x1"] + r) and (e["y0"] - r) < ly < (e["y1"] + r):
+                clash.append("LED(%.2f,%.2f)" % (lx, ly))
+        box = Part.makeBox(e["x1"] - e["x0"], e["y1"] - e["y0"], keep,
+                           App.Vector(e["x0"], e["y0"], z_lo))
+        leak = box.cut(lid).Volume
+        bad = leak > THRESHOLD
+        eng_fail += bad
+        w("  %-12s %.2f deep of %.2f -> %.2f mm must remain, Z %.2f..%.2f"
+          % ("'" + e["text"] + "'", e["depth"], P["LID_T"], keep, z_lo, z_hi))
+        w("               void under it %8.4f mm3  %s%s"
+          % (leak, "PERFORATED" if bad else "solid",
+             ("  [overlaps %s]" % ", ".join(clash)) if clash else ""))
+    w("  thinnest point of the lid anywhere under an engraving: %.2f mm"
+      % (P["LID_T"] - max(e["depth"] for e in P["ENGRAVINGS"])))
+
     w("")
     w("=== printability spot-checks ===")
     # thinnest standing wall left by the thinning operations
@@ -141,10 +174,11 @@ try:
     w("      %.3f mm of lid plate on a %.2f mm wall" % (ledge, P["WALL"]))
 
     w("")
-    ok = (hits == 0 and com.Volume <= THRESHOLD and dip_fail == 0 and port_fail == 0)
+    ok = (hits == 0 and com.Volume <= THRESHOLD and dip_fail == 0
+          and port_fail == 0 and eng_fail == 0)
     w("RESULT: %s" % ("PASS" if ok else
-                      "%d INTERFERENCE(S), %d BLOCKED DIP SWITCH(ES), %d BLOCKED PORT(S)"
-                      % (hits, dip_fail, port_fail)))
+                      "%d INTERFERENCE(S), %d BLOCKED DIP SWITCH(ES), %d BLOCKED PORT(S), %d PERFORATION(S)"
+                      % (hits, dip_fail, port_fail, eng_fail)))
 except Exception:
     w(traceback.format_exc())
 print("wrote", REPORT)

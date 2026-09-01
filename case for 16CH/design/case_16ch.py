@@ -186,7 +186,9 @@ LID_CUTS = [
     # top Z 14.34 in case frame -- 2.7 mm above the outside of the lid.
     # Its body stops 0.06 mm short of the lid rim's inner face, so the opening
     # has to take the rim with it. The lid keeps a 1.74 mm ledge over the wall.
-    ("header_2x40",   0.30,  52.30, -23.60, -16.40),
+    # Opened 4.00 mm further inboard (was -16.40) for ribbon-cable finger room:
+    # 11.20 mm of access instead of 7.20 across a 5.08 mm header body.
+    ("header_2x40",   0.30,  52.30, -23.60, -12.40),
     # PinHeader_1x02 (X 20.28..22.82) and the two 1x01 pins near +X
     ("header_1x02",  19.60,  23.50,  -3.70,   2.70),
     ("header_1x01a", 52.10,  56.00,  -4.20,  -0.40),
@@ -199,19 +201,23 @@ LID_CUTS = [
 # --- lid text
 TEXT_FONT  = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
 TEXT_LINES = ["Cerelog", "ESP-EEG 16CH"]
-TEXT_SIZE  = 7.0
+TEXT_SIZE  = 4.5
 TEXT_DEPTH = 0.80                 # engraving depth: half of LID_T
-TEXT_CX    = 1.50                  # centre of the free lid area
-TEXT_CY    = 13.00                # pushed +Y so no LED hole lands in a letter
-TEXT_GAP   = 3.00                 # line spacing
+TEXT_CX    = -3.50                # centred on the lid, nudged 3.50 mm -X so
+                                  # the last letter of 'ESP-EEG 16CH' clears
+                                  # the 1x02 header opening at X 19.60
+TEXT_CY    = -0.70                # centred. -0.70 because 'Cerelog' carries a
+                                  # descender and 'ESP-EEG 16CH' does not, so
+                                  # the raw block sits 0.70 mm high of centre
+TEXT_GAP   = 2.00                 # line spacing
 
 # --- small engraved labels: (text, size, x_centre, y_centre)
 # ON / OFF flank the slide-switch actuator, which sits at X -41.96 and
 # travels in X. ON is at lower X (the USB-C / battery end of the case).
 LABEL_DEPTH = 0.50
 LABELS = [
-    ("ON",      3.00, -49.00, -21.20),
-    ("OFF",     3.00, -34.50, -21.20),
+    ("ON",      2.40, -49.00, -21.20),   # smaller than microSD on purpose
+    ("OFF",     2.40, -34.50, -21.20),
     ("microSD", 3.00, -20.95, -21.20),
 ]
 
@@ -460,6 +466,12 @@ try:
             % (len(bars), TEX_PITCH, TEX_DEPTH, before - lid.Volume))
 
     # ---- lid text (engraved)
+    # Each engraving's XY footprint + depth is recorded and written to
+    # params.json so verify_fit.py can prove the cut does not perforate
+    # the lid. Do not remove: on the V2 case a bad preview render made the
+    # 0.80 mm engraving look like a through-cut, and there was no
+    # measurement to settle it.
+    ENGRAVED = []
     zt = BASE_H + LID_T
     total_h = len(TEXT_LINES) * TEXT_SIZE + (len(TEXT_LINES) - 1) * TEXT_GAP
     y_cur = TEXT_CY + total_h / 2.0 - TEXT_SIZE
@@ -474,7 +486,13 @@ try:
         sol.translate(App.Vector(TEXT_CX - bb.Center.x, y_cur - bb.YMin,
                                  zt - TEXT_DEPTH))
         lid = lid.cut(sol)
-        log("  text '%s' width %.2f at y %.2f" % (line, bb.XLength, y_cur))
+        ENGRAVED.append(dict(text=line, depth=TEXT_DEPTH,
+                             x0=TEXT_CX - bb.XLength/2.0,
+                             x1=TEXT_CX + bb.XLength/2.0,
+                             y0=y_cur, y1=y_cur + bb.YLength))
+        log("  text '%s' X %.2f..%.2f  Y %.2f..%.2f  (%.2f deep, %.2f left under it)"
+            % (line, TEXT_CX - bb.XLength/2.0, TEXT_CX + bb.XLength/2.0,
+               y_cur, y_cur + bb.YLength, TEXT_DEPTH, LID_T - TEXT_DEPTH))
         doc.removeObject(ss.Name)
         y_cur -= (TEXT_SIZE + TEXT_GAP)
     lid = lid.removeSplitter()
@@ -488,8 +506,13 @@ try:
         sol.translate(App.Vector(lx - bb.Center.x, ly - bb.Center.y,
                                  zt - LABEL_DEPTH))
         lid = lid.cut(sol)
-        log("  label '%s' %.2f wide at (%.2f, %.2f), %.2f deep"
-            % (label, bb.XLength, lx, ly, LABEL_DEPTH))
+        ENGRAVED.append(dict(text=label, depth=LABEL_DEPTH,
+                             x0=lx - bb.XLength/2.0, x1=lx + bb.XLength/2.0,
+                             y0=ly - bb.YLength/2.0, y1=ly + bb.YLength/2.0))
+        log("  label '%s' X %.2f..%.2f  Y %.2f..%.2f  (%.2f deep, %.2f left under it)"
+            % (label, lx - bb.XLength/2.0, lx + bb.XLength/2.0,
+               ly - bb.YLength/2.0, ly + bb.YLength/2.0,
+               LABEL_DEPTH, LID_T - LABEL_DEPTH))
         doc.removeObject(ss.Name)
     lid = lid.removeSplitter()
 
@@ -525,7 +548,8 @@ try:
                   RIM_UNDERSIDE=BASE_H - LIP_H, TOTAL_H=BASE_H + LID_T,
                   IN_L=IN_L, IN_W=IN_W, OUT_L=OUT_L, OUT_W=OUT_W,
                   MOUNT_HOLES=MOUNT_HOLES, LED_HOLES=LED_HOLES,
-                  FLOOR_CUTS=FLOOR_CUTS,
+                  FLOOR_CUTS=FLOOR_CUTS, LID_CUTS=LID_CUTS,
+                  ENGRAVINGS=ENGRAVED, LED_HOLE_D=LED_HOLE_D,
                   DIP_SWITCHES=[["DHA-08TQR",    -7.995,  3.295, -11.616, -3.516],
                                 ["DHA-08TQR001", 26.205, 37.495, -11.616, -3.516]],
                   DIP_BOTTOM_Z=Z_PCB_BOT - 2.385,

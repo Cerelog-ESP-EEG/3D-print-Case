@@ -36,7 +36,7 @@ from. Re-run it if the board is re-exported.
 | `show_assembly.py` | FreeCAD GUI | Opens it with everything visible, lid translucent. |
 | `_paths.py` | — | Shared paths, params loader, bad-model list. |
 
-## Three mistakes baked in as guardrails
+## Four mistakes baked in as guardrails
 
 **`verify_fit.py` uses a 0.001 mm3 threshold.** On the V2 case it was 0.5, and
 that hid a real 0.09 mm3 collision — the check reported a clean fit that was
@@ -51,6 +51,12 @@ engraving cutting clean through when it was 0.80 mm into 1.60 mm. Do not
 no-collision result only proves nothing touches; it does not prove an opening
 is actually in front of a connector. The port check sweeps each connector's own
 footprint outward through its wall and looks for material in the way.
+
+**`verify_fit.py` measures whether the engraving perforates the lid.** On V2 a
+bad preview render made the 0.80 mm engraving look like a through-cut and there
+was no measurement to settle it. The check now boxes the lid from the plate
+underside up to each engraving floor and reports the void volume — it must be
+0.0000 mm3.
 
 ## Known-bad models in 16ch_step.step
 

@@ -19,24 +19,24 @@ lid blank volume 10178.6
   4 lid sleeves: 4.24 tall, bore 2.30 x 1.70 deep, stop 0.10 above PCB
   3 LED holes, 1.20 mm dia, through the 1.60 mm lid
   notch minus_x_connectors in lid rim, removed 39.7 mm3
-  cut header_2x40    in lid, removed 673.9 mm3
+  cut header_2x40    in lid, removed 1006.7 mm3
   cut header_1x02    in lid, removed 39.9 mm3
   cut header_1x01a   in lid, removed 23.7 mm3
   cut header_1x01b   in lid, removed 23.7 mm3
   cut button_lo      in lid, removed 46.1 mm3
   cut button_hi      in lid, removed 46.1 mm3
   added 9 snap beads, 0.45 mm proud (0.25 mm engagement past the wall)
-  text 'Cerelog' width 35.28 at y 14.50
-  text 'ESP-EEG 16CH' width 69.63 at y 4.50
-  label 'ON' 5.76 wide at (-49.00, -21.20), 0.50 deep
-  label 'OFF' 7.99 wide at (-34.50, -21.20), 0.50 deep
-  label 'microSD' 16.75 wide at (-20.95, -21.20), 0.50 deep
+  text 'Cerelog' X -14.84..7.84  Y 0.30..6.20  (0.80 deep, 0.80 left under it)
+  text 'ESP-EEG 16CH' X -25.88..18.88  Y -6.20..-1.54  (0.80 deep, 0.80 left under it)
+  label 'ON' X -51.30..-46.70  Y -22.44..-19.96  (0.50 deep, 1.10 left under it)
+  label 'OFF' X -37.70..-31.30  Y -22.44..-19.96  (0.50 deep, 1.10 left under it)
+  label 'microSD' X -29.32..-12.58  Y -22.75..-19.65  (0.50 deep, 1.10 left under it)
 base: solids=1 valid=True volume=11304.9
       bbox 120.30 x 50.67 x 10.05  (Z 0.00..10.05)
-lid: solids=1 valid=True volume=9316.6
+lid: solids=1 valid=True volume=9139.9
       bbox 120.30 x 50.67 x 5.84  (Z 5.81..11.65)
 wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_base.stl  (7900 facets)
-wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_lid.stl  (37648 facets)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_lid.stl  (41208 facets)
 wrote case_16ch.FCStd
 wrote case_16ch_params.json
 OK

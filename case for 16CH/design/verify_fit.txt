@@ -31,6 +31,19 @@ skipping known-bad models: 530480210 (height wrong), SOLID, SOLID001, SOLID002
   MK-12C02-G020          -Y  power slide switch   obstruction    0.000 mm3  clear
   TF-SMD_TF-01A          -Y  microSD socket       obstruction    0.000 mm3  clear
 
+=== engraving vs lid thickness (does the text cut through?) ===
+  'Cerelog'    0.80 deep of 1.60 -> 0.80 mm must remain, Z 10.05..10.85
+               void under it   0.0000 mm3  solid
+  'ESP-EEG 16CH' 0.80 deep of 1.60 -> 0.80 mm must remain, Z 10.05..10.85
+               void under it   0.0000 mm3  solid
+  'ON'         0.50 deep of 1.60 -> 1.10 mm must remain, Z 10.05..11.15
+               void under it   0.0000 mm3  solid
+  'OFF'        0.50 deep of 1.60 -> 1.10 mm must remain, Z 10.05..11.15
+               void under it   0.0000 mm3  solid
+  'microSD'    0.50 deep of 1.60 -> 1.10 mm must remain, Z 10.05..11.15
+               void under it   0.0000 mm3  solid
+  thinnest point of the lid anywhere under an engraving: 0.80 mm
+
 === printability spot-checks ===
   wall 1.60, thinned to 0.60 (switch) / 0.80 (microSD) / 0.70 (-X ports)
   lid ledge over the -Y wall where the header opening removes the rim:
