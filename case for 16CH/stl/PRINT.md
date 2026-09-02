@@ -2,7 +2,7 @@
 
 ## Print these two. Nothing else.
 
-Files: **Printing? Go straight to [`stl/](stl/).**
+Files: **Printing? Go straight to [`stl/](stl).**
 
 | File | What it is |
 |---|---|
