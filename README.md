@@ -10,9 +10,12 @@ This repository contains the files and instructions for custom 3D-printed enclos
 
 The V2 and 16CH cases are generated from a parametric script rather than modelled by hand — change a constant, re-run, get new STLs. Each folder has its own `README.md`, and a `stl/PRINT.md` with everything you need at the printer.
 
-## Preview for v2 Case Below
+## Preview for v2 and 16CH Cases Below
 
-| <img src="v2case2.webp" width="460"> 
+| V2 | 16CH |
+| :---: | :---: |
+| <img src="v2case2.webp" width="460"> | <img src="16chcase.webp" width="460"> |
+| 102.60 x 46.55 x 11.35 mm | 120.30 x 50.67 x 11.65 mm |
 
 ## Preview for v1 Case Below
 
