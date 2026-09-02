@@ -14,8 +14,12 @@ The V2 and 16CH cases are generated from a parametric script rather than modelle
 
 | V2 | 16CH |
 | :---: | :---: |
-| <img src="v2case2.webp" width="460"> | <img src="16chcase.webp" width="460"> |
+| <img src="v2case2.webp" width="460"> | <img src="16chcaseprev.webp" width="460"> |
 | 102.60 x 46.55 x 11.35 mm | 120.30 x 50.67 x 11.65 mm |
+
+### 16CH exploded view
+
+<img src="16chcase.webp" width="460">
 
 ## Preview for v1 Case Below
 
