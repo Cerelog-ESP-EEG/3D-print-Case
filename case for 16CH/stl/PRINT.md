@@ -2,7 +2,7 @@
 
 ## Print these two. Nothing else.
 
-Files: **Printing? Go straight to [`stl/](stl).**
+Files: Here: https://github.com/Cerelog-ESP-EEG/3D-print-Case/tree/main/case%20for%2016CH/stl 
 
 | File | What it is |
 |---|---|
