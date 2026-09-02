@@ -64,17 +64,30 @@ The outside of the base is engraved either side of the openings, 0.50 mm deep
 into the 1.20 mm floor:
 
 ```
-     D M                                        S M
-     i o     [ SW1 ]          [ SW2 ]           R o
-     f d                                        B d
-     f e                                        1 e
-      |                                          ^
-      v                                          |
+   connector edge (electrode header / power switch / microSD)
+   ------------------------------------------------------------
+                                                  |
+     D M                                          v
+     i o      [ SW1 ]          [ SW2 ]           S M
+     f d                                         R o
+     f e                                         B d
+      ^                                          1 e
+      |
 ```
 
-Both legends are **rotated 90 deg**, so the arrows run along **+/-Y** — the
-axis the DHA-08TQR actuators actually travel (8 actuators in a row along X,
-each sliding in Y). `Diff Mode` is on the -X side, `SRB1 Mode` on the +X side.
+Both legends are **rotated 90 deg**, so the arrows run along the axis the
+DHA-08TQR actuators actually travel (8 actuators in a row along the long axis,
+each sliding across it). `Diff Mode` is on the -X side, `SRB1 Mode` on the +X
+side.
+
+With the case rolled over, **`Diff Mode` points toward the connector edge** —
+the edge carrying the electrode header, power switch and microSD — and
+**`SRB1 Mode` points toward the opposite edge**. These were reversed on the
+first print; flip them again by swapping the two signs in `BOT_GROUPS`.
+
+Text is **3.40 mm**. It was 2.60 on the first print, where Arial Bold strokes
+come out ~0.45 mm — about one 0.4 mm extrusion, which prints mushy. At 3.40
+the strokes are ~0.59 mm. V2's panel labels are 3.00 for comparison.
 
 The legend is **mirrored**, so it reads correctly when you roll the case over
 about its long axis — the way you would naturally turn a 120 mm case to reach

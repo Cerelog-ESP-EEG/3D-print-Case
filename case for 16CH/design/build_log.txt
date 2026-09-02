@@ -15,8 +15,8 @@ after 4 peg standoffs (boss 3.00 + peg 2.71), volume 12165.1
   thin switch_thin   on -Y wall to 0.60 mm, removed 16.5 mm3
   thin microsd_thin  on -Y wall to 0.80 mm, removed 39.1 mm3
   thin minus_x_ports on -X wall to 0.70 mm, removed 53.9 mm3
-  bottom 'Diff Mode' X -21.93..-15.74  Y -15.41..0.27  (0.50 deep, 0.70 left under it), removed 12.6 mm3
-  bottom 'SRB1 Mode' X 45.22..51.46  Y -15.41..0.27  (0.50 deep, 0.70 left under it), removed 14.7 mm3
+  bottom 'Diff Mode' X -24.85..-16.83  Y -17.40..2.27  (0.50 deep, 0.70 left under it), removed 20.7 mm3
+  bottom 'SRB1 Mode' X 46.30..54.37  Y -17.40..2.27  (0.50 deep, 0.70 left under it), removed 24.4 mm3
   base after bottom engraving: valid=True solids=1
 lid blank volume 10178.6
   4 lid sleeves: 4.24 tall, bore 2.30 x 1.70 deep, stop 0.10 above PCB
@@ -34,11 +34,11 @@ lid blank volume 10178.6
   label 'ON' X -51.30..-46.70  Y -22.44..-19.96  (0.50 deep, 1.10 left under it)
   label 'OFF' X -37.70..-31.30  Y -22.44..-19.96  (0.50 deep, 1.10 left under it)
   label 'microSD' X -29.32..-12.58  Y -22.75..-19.65  (0.50 deep, 1.10 left under it)
-base: solids=1 valid=True volume=11277.6
+base: solids=1 valid=True volume=11259.8
       bbox 120.30 x 50.67 x 10.05  (Z 0.00..10.05)
 lid: solids=1 valid=True volume=9139.9
       bbox 120.30 x 50.67 x 5.84  (Z 5.81..11.65)
-wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_base.stl  (27396 facets)
+wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_base.stl  (25996 facets)
 wrote /Users/simon/Desktop/ESP-EEG-KICAD/3D-print-Case/case for 16CH/stl/case_16ch_lid.stl  (41208 facets)
 wrote case_16ch.FCStd
 wrote case_16ch_params.json

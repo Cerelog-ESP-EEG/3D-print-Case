@@ -52,7 +52,7 @@ model.
 | Base openings | USB-C, battery cable, slide switch, microSD, **2 DIP switch holes in the floor** |
 | Lid openings | 2x20 electrode header, 1x02 header, 2x 1x01 pins, 2 buttons |
 | Markings, lid | `Cerelog` / `ESP-EEG 16CH` engraved 0.80 mm; `ON` `OFF` `microSD` at 0.50 mm |
-| Markings, base | DIP switch mode legend: `Diff Mode` (-X side) and `SRB1 Mode` (+X side), rotated 90 deg so the arrows run along +/-Y — the axis the DHA-08TQR actuators travel. 0.50 mm, mirrored to read when the case is rolled over |
+| Markings, base | DIP switch mode legend: `Diff Mode` (-X side) and `SRB1 Mode` (+X side), 3.40 mm text, rotated 90 deg so the arrows run along the DHA-08TQR travel axis. `Diff` points toward the connector edge, `SRB1` away. 0.50 mm deep, mirrored to read when the case is rolled over |
 | LED holes | 3 x 1.20 mm through the lid |
 
 Fit is verified by boolean intersection against all 220 real board solids from

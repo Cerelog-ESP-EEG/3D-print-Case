@@ -229,23 +229,29 @@ LABELS = [
 # stay put) and flips Y. The glyphs are therefore mirrored in Y only.
 # 'SRB1 Mode' is on the +X side, 'Diff Mode' on -X.
 BOT_TEXT_ON     = True
-BOT_TEXT_SIZE   = 2.60
+BOT_TEXT_SIZE   = 3.40            # was 2.60, which printed mushy: Arial Bold
+                                  # strokes at 2.60 are ~0.45 mm, about one
+                                  # 0.4 nozzle width. 3.40 gives ~0.59 mm.
+                                  # V2's panel labels are 3.00 for comparison.
 BOT_TEXT_DEPTH  = 0.50            # into the 1.20 floor -> 0.70 mm left under it
-BOT_LINE_GAP    = 0.90
+BOT_LINE_GAP    = 1.10
 BOT_TEXT_CY     = -7.566          # centre of the DHA-08TQR band (Y -11.62..-3.52)
 # 'SRB1 Mode' is 19.89 mm on one line at this size, but only 19.70 mm exists
 # between the right-hand switch opening (X 38.30) and the case edge. Stacked
 # over two lines the block is 9.08 mm and the arrow fits beside it.
 # (lines, side, anchor X, arrow direction)
 BOT_GROUPS = [
-    (["Diff", "Mode"], "left",  -11.00, -1),
-    (["SRB1", "Mode"], "right",  40.50, +1),
+    # last field is which way the arrow HEAD points before rotation; the
+    # arrow always sits outboard of the text. These were the other way round
+    # on the first print and came out backwards.
+    (["Diff", "Mode"], "left",  -11.00, +1),
+    (["SRB1", "Mode"], "right",  40.50, -1),
 ]
-BOT_ARROW_LEN    = 5.00
-BOT_ARROW_SHAFT  = 0.70
-BOT_ARROW_HEAD_L = 2.20
-BOT_ARROW_HEAD_W = 1.60           # half-width across the barbs
-BOT_ARROW_GAP    = 1.60           # between the text block and the arrow
+BOT_ARROW_LEN    = 6.00
+BOT_ARROW_SHAFT  = 0.85
+BOT_ARROW_HEAD_L = 2.60
+BOT_ARROW_HEAD_W = 1.90           # half-width across the barbs
+BOT_ARROW_GAP    = 1.80           # between the text block and the arrow
 BOT_ROT          = 90.0           # rotate each group about its own centre.
                                   # 90 puts the arrows along +/-Y, which is the
                                   # axis the DHA-08TQR actuators actually travel
@@ -462,8 +468,15 @@ try:
                 group.append(sh)
                 y_top -= (h + BOT_LINE_GAP)
 
-            a_tail = (bx0 + block_w + BOT_ARROW_GAP) if side == "right" \
-                     else (bx0 - BOT_ARROW_GAP)
+            # The arrow footprint always sits outboard of the text block; only
+            # the head end changes with adir, so flipping the arrow does not
+            # move it on top of the lettering.
+            if side == "right":
+                foot0 = bx0 + block_w + BOT_ARROW_GAP
+                a_tail = foot0 if adir > 0 else foot0 + BOT_ARROW_LEN
+            else:
+                foot1 = bx0 - BOT_ARROW_GAP
+                a_tail = foot1 if adir < 0 else foot1 - BOT_ARROW_LEN
             arw = arrow_profile(adir, BOT_ARROW_LEN)
             arw.translate(App.Vector(a_tail, BOT_TEXT_CY, 0))
             group.append(arw)

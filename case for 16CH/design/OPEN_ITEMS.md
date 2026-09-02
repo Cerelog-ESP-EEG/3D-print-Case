@@ -115,11 +115,13 @@ broke solidity.
 what slicers actually need. If a slicer refuses, the one-line fallback is to
 empty `LABELS` in `case_16ch.py` and rebuild.
 
-`case_16ch_base.stl` carries **42** pairs, all in Z 0.00..0.50 — the band of
+`case_16ch_base.stl` carries **22** pairs, all in Z 0.00..0.50 — the band of
 the bottom-face mode legend, i.e. the same glyph-tessellation defect. It was
-completely clean before that legend was added. Both parts are watertight,
-manifold, correctly oriented, and match their solid volumes
-(base 11277.4 vs 11277.6, lid 9140.0 vs 9139.9 mm3).
+completely clean before that legend was added, and the count dropped from 42
+to 22 when the legend text went from 2.60 to 3.40 mm: bigger glyphs tessellate
+into fewer slivers. Both parts are watertight, manifold, correctly oriented,
+and match their solid volumes (base 11259.1 vs 11259.8, lid 9140.0 vs
+9139.9 mm3).
 
 ## 7. Side-wall texture — not done, deliberately
 
