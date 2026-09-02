@@ -2,6 +2,8 @@
 
 ## Print these two. Nothing else.
 
+Files here: https://github.com/Cerelog-ESP-EEG/3D-print-Case/tree/main/case%20for%20v2/stl
+
 | File | What it is |
 |---|---|
 | `case_v2_base.stl` | Bottom half. Walls, floor, 4 press-fit pegs, all port openings. |
