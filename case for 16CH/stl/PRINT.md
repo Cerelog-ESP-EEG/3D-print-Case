@@ -2,6 +2,8 @@
 
 ## Print these two. Nothing else.
 
+Files: **Printing? Go straight to [`stl/](stl/).**
+
 | File | What it is |
 |---|---|
 | `case_16ch_base.stl` | Bottom half. Walls, floor, 4 press-fit pegs, all port openings, 2 DIP switch holes, mode legend on the outside face. |
